@@ -1,0 +1,14 @@
+# 1. Bật engine rewrite
+RewriteEngine On
+
+
+# 2. Không cho xem cấu trúc thư mục (Đã sửa đúng chính tả)
+Options -Indexes
+
+# 3. Nếu là file hoặc thư mục có thực thì bỏ qua, không rewrite
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# 4. Điều hướng tất cả các truy cập còn lại về index.php kèm theo biến url
+# Ví dụ: localhost/project/user/123 -> index.php?url=user/123
+RewriteRule ^(.*)$ index.php?url=$1 
