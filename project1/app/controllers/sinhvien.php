@@ -1,10 +1,16 @@
 <?php
-    class sinhvien 
+    require_once '../app/core/Controller.php';
+
+    class sinhvien extends Controller
     {
+
         public function index(){
-            //trả về view
-            require_once  "../app/views/sinhvien/index.php";
+            $sinhvienModel = $this->model('sinhvienModel');
+            $sinhviens = $sinhvienModel->getAllSinhvien();
             
+            // Truyền dữ liệu qua mảng $data để đồng bộ cách làm việc của View
+            $data = ['sinhviens' => $sinhviens];
+            $this->view('sinhvien/index', $data);
         }
         public function about(){
             echo "<h1>Trang about sinh vien</h1>";
@@ -50,6 +56,7 @@
             // Truyền mảng errors vào view qua biến $data
             $data = ['errors' => $errors];
             require_once  "../app/views/sinhvien/create.php";
+            $this->view('sinhvien/create', $data);
         }
     }
 ?>
