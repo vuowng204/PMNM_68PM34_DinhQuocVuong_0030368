@@ -2,6 +2,7 @@
 RewriteEngine On
 
 
+
 # 2. Không cho xem cấu trúc thư mục (Đã sửa đúng chính tả)
 Options -Indexes
 

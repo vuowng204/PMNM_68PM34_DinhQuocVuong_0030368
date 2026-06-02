@@ -14,10 +14,10 @@ class auth{
                     session_start();
                 }
                 $_SESSION['username'] = $username;
-                header('Location: /home/index');
+                header('Location: /project/project1/public/home/index');
                 exit();
             }else{
-                header('Location: /home/login');
+                header('Location: /project/project1/public/home/login');
                 exit();
             }
         }

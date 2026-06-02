@@ -1,15 +1,9 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Danh sách Sinh viên</title>
     <style>
         /* Toàn bộ trang */
-        body {
+        .sinhvien-container {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f4f6f9;
-            margin: 0;
+            margin-top: 20px;
             padding: 20px;
             display: flex;
             justify-content: center;
@@ -68,9 +62,8 @@
             color: #2c3e50;
         }
     </style>
-</head>
-<body>
 
+    <div class="sinhvien-container">
     <div class="table-container">
         <table class="student-table">
             <thead>
@@ -78,19 +71,23 @@
                     <th>ID</th>
                     <th>Họ và Tên</th>
                     <th>Lớp</th>
+                    <th>Giới tính</th>
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($sinhviens as $sinhvien): ?>
-                    <tr>
-                        <td><?php echo htmlspecialchars($sinhvien['id']); ?></td>
-                        <td><?php echo htmlspecialchars($sinhvien['hoten']); ?></td>
-                        <td><?php echo htmlspecialchars($sinhvien['lop']); ?></td>
-                    </tr>
-                <?php endforeach; ?>
+                <?php if (!empty($sinhviens) && is_array($sinhviens)): ?>
+                    <?php foreach ($sinhviens as $sinhvien): ?>
+                        <tr>
+                            <td><?php echo htmlspecialchars($sinhvien['id']); ?></td>
+                            <td><?php echo htmlspecialchars($sinhvien['hoten']); ?></td>
+                            <td><?php echo htmlspecialchars($sinhvien['lop']); ?></td>
+                            <td><?php echo htmlspecialchars($sinhvien['gioitinh']); ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <tr><td colspan="4">Không có dữ liệu sinh viên để hiển thị.</td></tr>
+                <?php endif; ?>
             </tbody>
         </table>
     </div>
-
-</body>
-</html>
+    </div>
