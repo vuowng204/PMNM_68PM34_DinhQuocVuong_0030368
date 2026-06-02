@@ -18,6 +18,14 @@ class sinhvienModel {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
- 
+    public function create($hoten, $gioitinh, $lop){
+        $sql = "INSERT INTO sinh_vien (hoten, gioitinh, lop) 
+                VALUES (:hoten, :gioitinh, :lop)";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(':hoten', $hoten);
+        $stmt->bindParam(':gioitinh', $gioitinh);
+        $stmt->bindParam(':lop', $lop);
+        return $stmt->execute();
+    }
 }
 ?>
