@@ -101,21 +101,21 @@
             $this->view('layout/masterlayout', $data);
         }
 
-        // public function update($id) {
-        //     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        //         $hoten = $_POST['hoten'] ?? '';
-        //         $gioitinh = $_POST['gioitinh'] ?? '';
-        //         $lop = $_POST['lop'] ?? '';
+        public function update($id) {
+            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+                $hoten = $_POST['hoten'] ?? '';
+                $gioitinh = $_POST['gioitinh'] ?? '';
+                $lop = $_POST['lop'] ?? '';
 
-        //         $sinhvienModel = $this->model('sinhvienModel');
-        //         if ($sinhvienModel->update($id, $hoten, $gioitinh, $lop)) {
-        //             header('Location: /sinhvien/index');
-        //             exit();
-        //         } else {
-        //             die("Lỗi hệ thống khi cập nhật dữ liệu.");
-        //         }
-        //     }
-        // }
+                $sinhvienModel = $this->model('sinhvienModel');
+                if ($sinhvienModel->update($id, $hoten, $gioitinh, $lop)) {
+                    header('Location: /sinhvien/index');
+                    exit();
+                } else {
+                    die("Lỗi hệ thống khi cập nhật dữ liệu.");
+                }
+            }
+        }
 
         // public function delete($id) {
         //     $sinhvienModel = $this->model('sinhvienModel');
