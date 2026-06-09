@@ -117,14 +117,14 @@
             }
         }
 
-        // public function delete($id) {
-        //     $sinhvienModel = $this->model('sinhvienModel');
-        //     if ($sinhvienModel->delete($id)) {
-        //         header('Location: /sinhvien/index');
-        //         exit();
-        //     } else {
-        //         die("Lỗi hệ thống khi xóa dữ liệu.");
-        //     }
-        // }
+        public function delete($id) {
+             $sinhvienModel = $this->model('sinhvienModel');
+            if ($sinhvienModel->delete($id)) {
+                header('Location: /sinhvien/index');
+                exit();
+            } else {
+                die("Lỗi hệ thống khi xóa dữ liệu.");
+            }
+         }
     }
 ?>
