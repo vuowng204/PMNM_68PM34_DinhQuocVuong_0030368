@@ -26,6 +26,7 @@
                 $this->action = $urlProcessed[1];
                 unset($urlProcessed[1]);
             }
+            
         }
         $this->params = $urlProcessed ? array_values($urlProcessed) : [];
         call_user_func_array([$this->controller, $this->action], $this->params);

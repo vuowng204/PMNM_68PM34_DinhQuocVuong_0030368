@@ -12,4 +12,4 @@ RewriteCond %{REQUEST_FILENAME} !-d
 
 # 4. Điều hướng tất cả các truy cập còn lại về index.php kèm theo biến url
 # Ví dụ: localhost/project/user/123 -> index.php?url=user/123
-RewriteRule ^(.*)$ index.php?url=$1 
+RewriteRule ^(.*)$ index.php?url=$1 [L,QSA]

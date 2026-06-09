@@ -4,18 +4,45 @@
     class sinhvien extends Controller
     {
 
-        public function index(){
-            $sinhvienModel = $this->model('sinhvienModel');
-            $sinhviens = $sinhvienModel->getAllSinhvien();
-            
-            // Truyền dữ liệu qua mảng $data để đồng bộ cách làm việc của View
-            $data = [
-                'sinhviens' => $sinhviens,
-                'viewname'  => 'sinhvien/index', // View con sẽ hiển thị bên trong layout
-                'title'     => 'Danh sách Sinh viên' // Tiêu đề trang
-            ];
-            $this->view('layout/masterlayout', $data);
+        public function index($page = 1){
+        // 1. Khởi động session nếu hệ thống của bạn chưa bật tự động
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
         }
+
+        $currentPage = is_numeric($page) ? (int)$page : 1;
+        if ($currentPage < 1) $currentPage = 1;
+
+        // 2. Xử lý logic lưu từ khóa tìm kiếm thông minh qua Session
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Nếu người dùng bấm nút Tìm kiếm
+            $search = $_POST['search'] ?? '';
+            $_SESSION['search_keyword'] = $search; // Lưu lại vào bộ nhớ tạm
+        } else {
+            // Nếu người dùng chỉ click chuyển trang (dùng GET), lấy từ khóa cũ ra dùng tiếp
+            $search = $_SESSION['search_keyword'] ?? '';
+        }
+
+        $limit = 5; 
+        $offset = ($currentPage - 1) * $limit;
+        
+        $sinhvienModel = $this->model('sinhvienModel');
+        $result = $sinhvienModel->paging($limit, $offset, $search);
+        $sinhviens = $result['sinhviens'];
+        $totalPage = $result['totalPage'];
+        
+        $data = [
+            'sinhviens' => $sinhviens,
+            'totalPage' => $totalPage,
+            'currentPage' => $currentPage,
+            'search'    => $search, // Đổ lại chữ vào ô input để người dùng thấy họ vừa tìm gì
+            'viewname'  => 'sinhvien/index', 
+            'title'     => 'Danh sách Sinh viên' 
+        ];
+        
+        
+        $this->view('layout/masterlayout', $data);
+    }
         public function about(){
             echo "<h1>Trang about sinh vien</h1>";
         }
@@ -62,10 +89,42 @@
            }
         }
 
+        public function edit($id) {
+            $sinhvienModel = $this->model('sinhvienModel');
+            $sinhvien = $sinhvienModel->getById($id);
+            
+            $data = [
+                'sinhvien' => $sinhvien,
+                'viewname' => 'sinhvien/edit',
+                'title'    => 'Chỉnh sửa Sinh viên'
+            ];
+            $this->view('layout/masterlayout', $data);
+        }
 
+        // public function update($id) {
+        //     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        //         $hoten = $_POST['hoten'] ?? '';
+        //         $gioitinh = $_POST['gioitinh'] ?? '';
+        //         $lop = $_POST['lop'] ?? '';
 
+        //         $sinhvienModel = $this->model('sinhvienModel');
+        //         if ($sinhvienModel->update($id, $hoten, $gioitinh, $lop)) {
+        //             header('Location: /sinhvien/index');
+        //             exit();
+        //         } else {
+        //             die("Lỗi hệ thống khi cập nhật dữ liệu.");
+        //         }
+        //     }
+        // }
 
-
-
+        // public function delete($id) {
+        //     $sinhvienModel = $this->model('sinhvienModel');
+        //     if ($sinhvienModel->delete($id)) {
+        //         header('Location: /sinhvien/index');
+        //         exit();
+        //     } else {
+        //         die("Lỗi hệ thống khi xóa dữ liệu.");
+        //     }
+        // }
     }
 ?>
