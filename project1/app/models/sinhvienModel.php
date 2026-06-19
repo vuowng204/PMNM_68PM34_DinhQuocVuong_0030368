@@ -53,7 +53,18 @@ class sinhvienModel {
         return $stmt->execute();
     }
 
-    public function paging($limit, $offset, $search, $maLopFilter = '') {
+    public function paging($limit, $offset, $search, $maLopFilter = '', $sortField = 'id', $sortOrder = 'ASC') {
+        // Whitelist validation to prevent SQL injection
+        $allowedFields = ['id', 'hoten'];
+        $allowedOrders = ['ASC', 'DESC'];
+
+        if (!in_array($sortField, $allowedFields)) {
+            $sortField = 'id';
+        }
+        if (!in_array($sortOrder, $allowedOrders)) {
+            $sortOrder = 'ASC';
+        }
+
         $searchTerm = "%" . $search . "%";
 
         // 1. Câu lệnh đếm TỔNG SỐ BẢN GHI
@@ -74,13 +85,13 @@ class sinhvienModel {
         if ($totalPage < 1) $totalPage = 1;
 //      
         // Việc tìm kiếm được thược hiện đồng thời thông qua lệnh này.
-        // 2. Câu lệnh lấy danh sách dữ liệu có phân trang và tìm kiếm
+        // 2. Câu lệnh lấy danh sách dữ liệu có phân trang, tìm kiếm và sắp xếp
         $sqlData = "SELECT * FROM sinh_vien 
                     WHERE (hoten LIKE :search OR ma_lop LIKE :search)";
         if ($maLopFilter !== '') {
             $sqlData .= " AND ma_lop = :maLopFilter";
         }
-        $sqlData .= " LIMIT :limit OFFSET :offset";
+        $sqlData .= " ORDER BY " . $sortField . " " . $sortOrder . " LIMIT :limit OFFSET :offset";
                     
         $stmtData = $this->conn->prepare($sqlData);
         $stmtData->bindValue(':search', $searchTerm, PDO::PARAM_STR);

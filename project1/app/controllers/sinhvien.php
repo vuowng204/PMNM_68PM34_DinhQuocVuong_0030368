@@ -12,23 +12,33 @@
         $currentPage = is_numeric($page) ? (int)$page : 1;
         if ($currentPage < 1) $currentPage = 1;
 
-        // 2. Xử lý logic lưu từ khóa tìm kiếm qua Session
-
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $search = $_POST['search'] ?? '';
             $maLopFilter = $_POST['malop_filter'] ?? '';
+            $sortField = $_POST['sort_field'] ?? $_SESSION['sinhvien_sort_field'] ?? 'id';
+            $sortOrder = $_POST['sort_order'] ?? $_SESSION['sinhvien_sort_order'] ?? 'ASC';
+
             $_SESSION['search_keyword'] = $search;
             $_SESSION['sinhvien_malop_filter'] = $maLopFilter;
+            $_SESSION['sinhvien_sort_field'] = $sortField;
+            $_SESSION['sinhvien_sort_order'] = $sortOrder;
         } else {
-            $search = $_SESSION['search_keyword'] ?? '';
-            $maLopFilter = $_SESSION['sinhvien_malop_filter'] ?? '';
+            $search = $_GET['search'] ?? $_SESSION['search_keyword'] ?? '';
+            $maLopFilter = $_GET['malop_filter'] ?? $_SESSION['sinhvien_malop_filter'] ?? '';
+            $sortField = $_GET['sort_field'] ?? $_SESSION['sinhvien_sort_field'] ?? 'id';
+            $sortOrder = $_GET['sort_order'] ?? $_SESSION['sinhvien_sort_order'] ?? 'ASC';
+
+            $_SESSION['search_keyword'] = $search;
+            $_SESSION['sinhvien_malop_filter'] = $maLopFilter;
+            $_SESSION['sinhvien_sort_field'] = $sortField;
+            $_SESSION['sinhvien_sort_order'] = $sortOrder;
         }
 
         $limit = 5; 
         $offset = ($currentPage - 1) * $limit;
         
         $sinhvienModel = $this->model('sinhvienModel');
-        $result = $sinhvienModel->paging($limit, $offset, $search, $maLopFilter);
+        $result = $sinhvienModel->paging($limit, $offset, $search, $maLopFilter, $sortField, $sortOrder);
         $sinhviens = $result['sinhviens'];
         $totalPage = $result['totalPage'];
 
@@ -41,6 +51,8 @@
             'currentPage' => $currentPage,
             'search'      => $search,
             'maLopFilter' => $maLopFilter,
+            'sortField'   => $sortField,
+            'sortOrder'   => $sortOrder,
             'lophocs'     => $lophocs,
             'viewname'    => 'sinhvien/index', 
             'title'       => 'Danh sách Sinh viên' 

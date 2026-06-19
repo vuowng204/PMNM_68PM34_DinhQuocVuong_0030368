@@ -128,6 +128,9 @@
                 <?php endforeach; ?>
             <?php endif; ?>
         </select>
+
+        <input type="hidden" name="sort_field" value="<?php echo htmlspecialchars($sortField ?? 'id'); ?>">
+        <input type="hidden" name="sort_order" value="<?php echo htmlspecialchars($sortOrder ?? 'ASC'); ?>">
         
         <button type="submit" class="btn-primary">Tìm kiếm</button>
     </form>
@@ -138,8 +141,16 @@
         <table class="student-table">
             <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>Họ và Tên</th>
+                    <th>
+                        <a href="../sinhvien/index/1?sort_field=id&sort_order=<?php echo (($sortField ?? 'id') === 'id' && ($sortOrder ?? 'ASC') === 'ASC') ? 'DESC' : 'ASC'; ?>&search=<?php echo urlencode($search); ?>&malop_filter=<?php echo urlencode($maLopFilter ?? ''); ?>" style="color: white; text-decoration: none; display: flex; align-items: center; gap: 4px;">
+                            ID <?php echo (($sortField ?? 'id') === 'id') ? ((($sortOrder ?? 'ASC') === 'ASC') ? '▲' : '▼') : ''; ?>
+                        </a>
+                    </th>
+                    <th>
+                        <a href="../sinhvien/index/1?sort_field=hoten&sort_order=<?php echo (($sortField ?? 'id') === 'hoten' && ($sortOrder ?? 'ASC') === 'ASC') ? 'DESC' : 'ASC'; ?>&search=<?php echo urlencode($search); ?>&malop_filter=<?php echo urlencode($maLopFilter ?? ''); ?>" style="color: white; text-decoration: none; display: flex; align-items: center; gap: 4px;">
+                            Họ và Tên <?php echo (($sortField ?? 'id') === 'hoten') ? ((($sortOrder ?? 'ASC') === 'ASC') ? '▲' : '▼') : ''; ?>
+                        </a>
+                    </th>
                     <th>Mã Lớp</th>
                     <th>Giới tính</th>
                     <th>Hành động</th>
@@ -174,7 +185,7 @@
     <!-- Pagination -->
     <div class="pagination">
         <?php for($i = 1; $i <= $totalPage; $i++): ?>
-            <a href="../sinhvien/index/<?php echo $i; ?>?search=<?php echo urlencode($search); ?>&malop_filter=<?php echo urlencode($maLopFilter ?? ''); ?>" class="<?php echo ($i == $currentPage) ? 'active' : ''; ?>">
+            <a href="../sinhvien/index/<?php echo $i; ?>?search=<?php echo urlencode($search); ?>&malop_filter=<?php echo urlencode($maLopFilter ?? ''); ?>&sort_field=<?php echo urlencode($sortField ?? 'id'); ?>&sort_order=<?php echo urlencode($sortOrder ?? 'ASC'); ?>" class="<?php echo ($i == $currentPage) ? 'active' : ''; ?>">
                 <?php echo $i; ?>
             </a>
         <?php endfor; ?>
