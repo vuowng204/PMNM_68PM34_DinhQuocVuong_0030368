@@ -58,7 +58,7 @@ class sinhvienModel {
     $searchTerm = "%" . $search . "%";
 
     // 2. Câu lệnh đếm TỔNG SỐ BẢN GHI THEO TỪ KHÓA (Quan trọng nhất)
-    $sqlCount = "SELECT COUNT(*) as total FROM sinh_vien WHERE hoten LIKE :search OR lop LIKE :search";
+    $sqlCount = "SELECT COUNT(*) as total FROM sinh_vien WHERE hoten LIKE :search OR ma_lop LIKE :search";
     $stmtCount = $this->conn->prepare($sqlCount);
     $stmtCount->bindValue(':search', $searchTerm, PDO::PARAM_STR);
     $stmtCount->execute();
@@ -70,7 +70,7 @@ class sinhvienModel {
 
     // 3. Câu lệnh lấy danh sách dữ liệu có phân trang và tìm kiếm
     $sqlData = "SELECT * FROM sinh_vien 
-                WHERE hoten LIKE :search OR lop LIKE :search 
+                WHERE hoten LIKE :search OR ma_lop LIKE :search 
                 LIMIT :limit OFFSET :offset";
                 
     $stmtData = $this->conn->prepare($sqlData);

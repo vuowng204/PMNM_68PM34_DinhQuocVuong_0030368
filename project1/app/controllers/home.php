@@ -1,5 +1,6 @@
 <?php
-    class home 
+    require_once '../app/core/Controller.php';
+    class home extends Controller
     {
         public function index(){
             if (session_status() === PHP_SESSION_NONE) session_start();
@@ -14,9 +15,24 @@
                 echo "<li>Lớp: " . htmlspecialchars($sv['lop']) . "</li>";
                 echo "</ul>";
                 unset($_SESSION['student_data']); // Xóa dữ liệu sau khi hiển thị
-            } else {
-                echo "<h1>xin chào</h1>";
             }
+            // } else {
+            //     echo "<h1>xin chào</h1>";
+            // }
+    
+        $lopModel = $this->model('lopModel');
+        $sinhvienModel = $this->model('sinhvienModel');
+
+        $totalLop = count($lopModel->getAllLop());
+        $totalSv = count($sinhvienModel->getAllSinhvien());
+
+        $data = [
+            'totalLop' => $totalLop,
+            'totalSv'  => $totalSv,
+            'viewname' => 'home/index', 
+            'title'    => 'Trang chủ - QLSV'
+        ];
+        $this->view('layout/masterlayout', $data);
         }
         public function about(){
             echo "<h1>Trang about</h1>";

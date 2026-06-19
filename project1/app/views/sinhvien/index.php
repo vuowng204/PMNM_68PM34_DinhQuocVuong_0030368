@@ -139,7 +139,7 @@
                         <tr>
                             <td><?php echo htmlspecialchars($sinhvien['id']); ?></td>
                             <td><?php echo htmlspecialchars($sinhvien['hoten']); ?></td>
-                            <td><?php echo htmlspecialchars($sinhvien['lop']); ?></td>
+                            <td><?php echo htmlspecialchars($sinhvien['ma_lop']); ?></td>
                             <td><?php echo htmlspecialchars($sinhvien['gioitinh']); ?></td>
                             <td>
                                 <a href="../sinhvien/edit/<?php echo $sinhvien['id']; ?>" class="btn-action btn-edit">Sửa</a>
