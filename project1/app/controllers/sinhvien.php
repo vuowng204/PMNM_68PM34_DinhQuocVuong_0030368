@@ -17,24 +17,33 @@
             $maLopFilter = $_POST['malop_filter'] ?? '';
             $sortField = $_POST['sort_field'] ?? $_SESSION['sinhvien_sort_field'] ?? 'id';
             $sortOrder = $_POST['sort_order'] ?? $_SESSION['sinhvien_sort_order'] ?? 'ASC';
+            $limit = isset($_POST['limit']) ? (int)$_POST['limit'] : ($_SESSION['sinhvien_page_size'] ?? 5);
 
             $_SESSION['search_keyword'] = $search;
             $_SESSION['sinhvien_malop_filter'] = $maLopFilter;
             $_SESSION['sinhvien_sort_field'] = $sortField;
             $_SESSION['sinhvien_sort_order'] = $sortOrder;
+            $_SESSION['sinhvien_page_size'] = $limit;
         } else {
             $search = $_GET['search'] ?? $_SESSION['search_keyword'] ?? '';
             $maLopFilter = $_GET['malop_filter'] ?? $_SESSION['sinhvien_malop_filter'] ?? '';
             $sortField = $_GET['sort_field'] ?? $_SESSION['sinhvien_sort_field'] ?? 'id';
             $sortOrder = $_GET['sort_order'] ?? $_SESSION['sinhvien_sort_order'] ?? 'ASC';
+            $limit = isset($_GET['limit']) ? (int)$_GET['limit'] : ($_SESSION['sinhvien_page_size'] ?? 5);
 
             $_SESSION['search_keyword'] = $search;
             $_SESSION['sinhvien_malop_filter'] = $maLopFilter;
             $_SESSION['sinhvien_sort_field'] = $sortField;
             $_SESSION['sinhvien_sort_order'] = $sortOrder;
+            $_SESSION['sinhvien_page_size'] = $limit;
         }
 
-        $limit = 5; 
+        // Validate limit to prevent invalid values
+        $allowedLimits = [5, 10, 20, 50];
+        if (!in_array($limit, $allowedLimits)) {
+            $limit = 5;
+        }
+
         $offset = ($currentPage - 1) * $limit;
         
         $sinhvienModel = $this->model('sinhvienModel');
@@ -53,6 +62,7 @@
             'maLopFilter' => $maLopFilter,
             'sortField'   => $sortField,
             'sortOrder'   => $sortOrder,
+            'limit'       => $limit,
             'lophocs'     => $lophocs,
             'viewname'    => 'sinhvien/index', 
             'title'       => 'Danh sách Sinh viên' 

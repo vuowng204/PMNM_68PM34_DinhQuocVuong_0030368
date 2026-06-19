@@ -129,6 +129,13 @@
             <?php endif; ?>
         </select>
 
+        <select name="limit" onchange="this.form.submit()" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px; background: white; cursor: pointer;">
+            <option value="5" <?php echo ($limit == 5) ? 'selected' : ''; ?>>5 dòng/trang</option>
+            <option value="10" <?php echo ($limit == 10) ? 'selected' : ''; ?>>10 dòng/trang</option>
+            <option value="20" <?php echo ($limit == 20) ? 'selected' : ''; ?>>20 dòng/trang</option>
+            <option value="50" <?php echo ($limit == 50) ? 'selected' : ''; ?>>50 dòng/trang</option>
+        </select>
+
         <input type="hidden" name="sort_field" value="<?php echo htmlspecialchars($sortField ?? 'id'); ?>">
         <input type="hidden" name="sort_order" value="<?php echo htmlspecialchars($sortOrder ?? 'ASC'); ?>">
         
@@ -142,12 +149,12 @@
             <thead>
                 <tr>
                     <th>
-                        <a href="../sinhvien/index/1?sort_field=id&sort_order=<?php echo (($sortField ?? 'id') === 'id' && ($sortOrder ?? 'ASC') === 'ASC') ? 'DESC' : 'ASC'; ?>&search=<?php echo urlencode($search); ?>&malop_filter=<?php echo urlencode($maLopFilter ?? ''); ?>" style="color: white; text-decoration: none; display: flex; align-items: center; gap: 4px;">
+                        <a href="../sinhvien/index/1?sort_field=id&sort_order=<?php echo (($sortField ?? 'id') === 'id' && ($sortOrder ?? 'ASC') === 'ASC') ? 'DESC' : 'ASC'; ?>&search=<?php echo urlencode($search); ?>&malop_filter=<?php echo urlencode($maLopFilter ?? ''); ?>&limit=<?php echo $limit; ?>" style="color: white; text-decoration: none; display: flex; align-items: center; gap: 4px;">
                             ID <?php echo (($sortField ?? 'id') === 'id') ? ((($sortOrder ?? 'ASC') === 'ASC') ? '▲' : '▼') : ''; ?>
                         </a>
                     </th>
                     <th>
-                        <a href="../sinhvien/index/1?sort_field=hoten&sort_order=<?php echo (($sortField ?? 'id') === 'hoten' && ($sortOrder ?? 'ASC') === 'ASC') ? 'DESC' : 'ASC'; ?>&search=<?php echo urlencode($search); ?>&malop_filter=<?php echo urlencode($maLopFilter ?? ''); ?>" style="color: white; text-decoration: none; display: flex; align-items: center; gap: 4px;">
+                        <a href="../sinhvien/index/1?sort_field=hoten&sort_order=<?php echo (($sortField ?? 'id') === 'hoten' && ($sortOrder ?? 'ASC') === 'ASC') ? 'DESC' : 'ASC'; ?>&search=<?php echo urlencode($search); ?>&malop_filter=<?php echo urlencode($maLopFilter ?? ''); ?>&limit=<?php echo $limit; ?>" style="color: white; text-decoration: none; display: flex; align-items: center; gap: 4px;">
                             Họ và Tên <?php echo (($sortField ?? 'id') === 'hoten') ? ((($sortOrder ?? 'ASC') === 'ASC') ? '▲' : '▼') : ''; ?>
                         </a>
                     </th>
@@ -185,7 +192,7 @@
     <!-- Pagination -->
     <div class="pagination">
         <?php for($i = 1; $i <= $totalPage; $i++): ?>
-            <a href="../sinhvien/index/<?php echo $i; ?>?search=<?php echo urlencode($search); ?>&malop_filter=<?php echo urlencode($maLopFilter ?? ''); ?>&sort_field=<?php echo urlencode($sortField ?? 'id'); ?>&sort_order=<?php echo urlencode($sortOrder ?? 'ASC'); ?>" class="<?php echo ($i == $currentPage) ? 'active' : ''; ?>">
+            <a href="../sinhvien/index/<?php echo $i; ?>?search=<?php echo urlencode($search); ?>&malop_filter=<?php echo urlencode($maLopFilter ?? ''); ?>&sort_field=<?php echo urlencode($sortField ?? 'id'); ?>&sort_order=<?php echo urlencode($sortOrder ?? 'ASC'); ?>&limit=<?php echo $limit; ?>" class="<?php echo ($i == $currentPage) ? 'active' : ''; ?>">
                 <?php echo $i; ?>
             </a>
         <?php endfor; ?>
