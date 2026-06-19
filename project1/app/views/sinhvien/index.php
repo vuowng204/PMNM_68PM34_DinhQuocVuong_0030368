@@ -117,6 +117,18 @@
     <div class="header-actions">
     <form action="../sinhvien/index/1" method="POST" class="search-form">
         <input type="text" name="search" placeholder="Tìm theo tên hoặc lớp..." value="<?php echo htmlspecialchars($search); ?>">
+        
+        <select name="malop_filter" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px; background: white; cursor: pointer;">
+            <option value="">-- Tất cả lớp --</option>
+            <?php if (!empty($lophocs)): ?>
+                <?php foreach ($lophocs as $lop): ?>
+                    <option value="<?php echo htmlspecialchars($lop['Malop']); ?>" <?php echo ($lop['Malop'] == ($maLopFilter ?? '')) ? 'selected' : ''; ?>>
+                        <?php echo htmlspecialchars($lop['Malop'] . ' - ' . $lop['tenlop']); ?>
+                    </option>
+                <?php endforeach; ?>
+            <?php endif; ?>
+        </select>
+        
         <button type="submit" class="btn-primary">Tìm kiếm</button>
     </form>
         <a href="../sinhvien/create" class="btn-primary" style="background-color: #27ae60;">+ Thêm sinh viên</a>
@@ -128,7 +140,7 @@
                 <tr>
                     <th>ID</th>
                     <th>Họ và Tên</th>
-                    <th>Lớp</th>
+                    <th>Mã Lớp</th>
                     <th>Giới tính</th>
                     <th>Hành động</th>
                 </tr>
@@ -139,7 +151,12 @@
                         <tr>
                             <td><?php echo htmlspecialchars($sinhvien['id']); ?></td>
                             <td><?php echo htmlspecialchars($sinhvien['hoten']); ?></td>
-                            <td><?php echo htmlspecialchars($sinhvien['ma_lop']); ?></td>
+                            <td>
+                                <?php 
+                                    $studentLop = !empty($sinhvien['ma_lop']) ? $sinhvien['ma_lop'] : (!empty($sinhvien['malop']) ? $sinhvien['malop'] : ($sinhvien['lop'] ?? ''));
+                                    echo htmlspecialchars($studentLop); 
+                                ?>
+                            </td>
                             <td><?php echo htmlspecialchars($sinhvien['gioitinh']); ?></td>
                             <td>
                                 <a href="../sinhvien/edit/<?php echo $sinhvien['id']; ?>" class="btn-action btn-edit">Sửa</a>
@@ -157,7 +174,7 @@
     <!-- Pagination -->
     <div class="pagination">
         <?php for($i = 1; $i <= $totalPage; $i++): ?>
-            <a href="../sinhvien/index/<?php echo $i; ?>?search=<?php echo urlencode($search); ?>" class="<?php echo ($i == $currentPage) ? 'active' : ''; ?>">
+            <a href="../sinhvien/index/<?php echo $i; ?>?search=<?php echo urlencode($search); ?>&malop_filter=<?php echo urlencode($maLopFilter ?? ''); ?>" class="<?php echo ($i == $currentPage) ? 'active' : ''; ?>">
                 <?php echo $i; ?>
             </a>
         <?php endfor; ?>

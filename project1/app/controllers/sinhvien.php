@@ -5,7 +5,6 @@
     {
 
         public function index($page = 1){
-        // 1. Khởi động session nếu hệ thống của bạn chưa bật tự động
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
@@ -13,33 +12,37 @@
         $currentPage = is_numeric($page) ? (int)$page : 1;
         if ($currentPage < 1) $currentPage = 1;
 
-        // 2. Xử lý logic lưu từ khóa tìm kiếm thông minh qua Session
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // Nếu người dùng bấm nút Tìm kiếm
             $search = $_POST['search'] ?? '';
-            $_SESSION['search_keyword'] = $search; // Lưu lại vào bộ nhớ tạm
+            $maLopFilter = $_POST['malop_filter'] ?? '';
+            $_SESSION['search_keyword'] = $search;
+            $_SESSION['sinhvien_malop_filter'] = $maLopFilter;
         } else {
-            // Nếu người dùng chỉ click chuyển trang (dùng GET), lấy từ khóa cũ ra dùng tiếp
             $search = $_SESSION['search_keyword'] ?? '';
+            $maLopFilter = $_SESSION['sinhvien_malop_filter'] ?? '';
         }
 
         $limit = 5; 
         $offset = ($currentPage - 1) * $limit;
         
         $sinhvienModel = $this->model('sinhvienModel');
-        $result = $sinhvienModel->paging($limit, $offset, $search);
+        $result = $sinhvienModel->paging($limit, $offset, $search, $maLopFilter);
         $sinhviens = $result['sinhviens'];
         $totalPage = $result['totalPage'];
+
+        $lopModel = $this->model('lopModel');
+        $lophocs = $lopModel->getAllLop();
         
         $data = [
-            'sinhviens' => $sinhviens,
-            'totalPage' => $totalPage,
+            'sinhviens'   => $sinhviens,
+            'totalPage'   => $totalPage,
             'currentPage' => $currentPage,
-            'search'    => $search, // Đổ lại chữ vào ô input để người dùng thấy họ vừa tìm gì
-            'viewname'  => 'sinhvien/index', 
-            'title'     => 'Danh sách Sinh viên' 
+            'search'      => $search,
+            'maLopFilter' => $maLopFilter,
+            'lophocs'     => $lophocs,
+            'viewname'    => 'sinhvien/index', 
+            'title'       => 'Danh sách Sinh viên' 
         ];
-        
         
         $this->view('layout/masterlayout', $data);
     }
@@ -47,9 +50,11 @@
             echo "<h1>Trang about sinh vien</h1>";
         }
         public function create(){
-            // Chỉ hiển thị form
+            $lopModel = $this->model('lopModel');
+            $lophocs = $lopModel->getAllLop();
             $data = [
                 'errors'   => [],
+                'lophocs'  => $lophocs,
                 'viewname' => 'sinhvien/create',
                 'title'    => 'Đăng ký Sinh viên'
             ];
@@ -60,22 +65,31 @@
                 $errors = [];
                 $hoten = $_POST['hoten'] ?? '';
                 $gioitinh = $_POST['gioitinh'] ?? '';
-                $lop = $_POST['lop'] ?? '';
+                $ma_lop = $_POST['malop'] ?? $_POST['ma_lop'] ?? $_POST['lop'] ?? '';
 
-                // Nếu có lỗi, quay lại form và hiển thị lỗi
+                if (empty($hoten)) {
+                    $errors[] = 'Họ tên không được để trống.';
+                }
+                if (empty($ma_lop)) {
+                    $errors[] = 'Lớp học không được để trống.';
+                }
+
                 if (!empty($errors)) {
+                    $lopModel = $this->model('lopModel');
+                    $lophocs = $lopModel->getAllLop();
                     $data = [
-                        'errors' => $errors,
+                        'errors'   => $errors,
+                        'lophocs'  => $lophocs,
                         'viewname' => 'sinhvien/create',
-                        'title' => 'Đăng ký Sinh viên'
+                        'title'    => 'Đăng ký Sinh viên',
+                        'old'      => $_POST
                     ];
                     $this->view('layout/masterlayout', $data);
                     return;
                 }
                 
-                // Nếu không có lỗi, tiến hành lưu Database
                 $sinhvienModel = $this->model('sinhvienModel');
-                if ($sinhvienModel->create($hoten, $gioitinh, $lop)) {
+                if ($sinhvienModel->create($hoten, $gioitinh, $ma_lop)) {
                     if (session_status() === PHP_SESSION_NONE) session_start();
                     $_SESSION['student_data'] = $_POST;
                     
@@ -84,8 +98,6 @@
                 } else {
                     die("Lỗi hệ thống khi lưu dữ liệu.");
                 }
-               
-             
            }
         }
 
@@ -93,8 +105,12 @@
             $sinhvienModel = $this->model('sinhvienModel');
             $sinhvien = $sinhvienModel->getById($id);
             
+            $lopModel = $this->model('lopModel');
+            $lophocs = $lopModel->getAllLop();
+
             $data = [
                 'sinhvien' => $sinhvien,
+                'lophocs'  => $lophocs,
                 'viewname' => 'sinhvien/edit',
                 'title'    => 'Chỉnh sửa Sinh viên'
             ];
@@ -105,10 +121,10 @@
             if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $hoten = $_POST['hoten'] ?? '';
                 $gioitinh = $_POST['gioitinh'] ?? '';
-                $lop = $_POST['lop'] ?? '';
+                $ma_lop = $_POST['malop'] ?? $_POST['ma_lop'] ?? $_POST['lop'] ?? '';
 
                 $sinhvienModel = $this->model('sinhvienModel');
-                if ($sinhvienModel->update($id, $hoten, $gioitinh, $lop)) {
+                if ($sinhvienModel->update($id, $hoten, $gioitinh, $ma_lop)) {
                     header('Location: /sinhvien/index');
                     exit();
                 } else {

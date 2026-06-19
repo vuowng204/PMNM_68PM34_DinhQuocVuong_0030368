@@ -44,8 +44,17 @@
             <input type="text" name="ngaysinh" id="ngaysinh" placeholder="dd/mm/yyyy" value="<?php echo $_POST['ngaysinh'] ?? ''; ?>" required>
         </div> -->
         <div class="form-group">
-            <label for="lop">Lớp:</label>
-            <input type="text" name="lop" id="lop" value="<?php echo $_POST['lop'] ?? ''; ?>" required>
+            <label for="malop">Lớp học *</label>
+            <select name="malop" id="malop" style="width: 250px; padding: 5px;" required>
+                <option value="">-- Chọn lớp học --</option>
+                <?php if (!empty($lophocs)): ?>
+                    <?php foreach ($lophocs as $lop): ?>
+                        <option value="<?php echo htmlspecialchars($lop['Malop']); ?>" <?php echo (isset($old['malop']) && $old['malop'] == $lop['Malop']) ? 'selected' : ''; ?>>
+                            <?php echo htmlspecialchars($lop['Malop'] . ' - ' . $lop['tenlop']); ?>
+                        </option>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </select>
         </div>
         <button type="submit" name="btnDangKy">Đăng ký</button>
     </form>

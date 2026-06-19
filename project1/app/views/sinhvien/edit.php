@@ -20,8 +20,20 @@
     </div>
 
     <div class="form-group">
-        <label for="lop">Lớp:</label>
-        <input type="text" name="lop" id="lop" value="<?php echo htmlspecialchars($sinhvien['lop']); ?>" required>
+        <label for="malop">Lớp học *</label>
+        <select name="malop" id="malop" style="width: 250px; padding: 5px;" required>
+            <option value="">-- Chọn lớp học --</option>
+            <?php 
+                $currentLop = !empty($sinhvien['ma_lop']) ? $sinhvien['ma_lop'] : (!empty($sinhvien['malop']) ? $sinhvien['malop'] : ($sinhvien['lop'] ?? ''));
+            ?>
+            <?php if (!empty($lophocs)): ?>
+                <?php foreach ($lophocs as $lop): ?>
+                    <option value="<?php echo htmlspecialchars($lop['Malop']); ?>" <?php echo ($lop['Malop'] == $currentLop) ? 'selected' : ''; ?>>
+                        <?php echo htmlspecialchars($lop['Malop'] . ' - ' . $lop['tenlop']); ?>
+                    </option>
+                <?php endforeach; ?>
+            <?php endif; ?>
+        </select>
     </div>
 
     <div class="form-group">
