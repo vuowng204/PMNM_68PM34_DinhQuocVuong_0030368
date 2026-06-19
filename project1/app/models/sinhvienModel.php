@@ -72,7 +72,8 @@ class sinhvienModel {
 
         $totalPage = ceil($totalRecords / $limit);
         if ($totalPage < 1) $totalPage = 1;
-
+//      
+        // Việc tìm kiếm được thược hiện đồng thời thông qua lệnh này.
         // 2. Câu lệnh lấy danh sách dữ liệu có phân trang và tìm kiếm
         $sqlData = "SELECT * FROM sinh_vien 
                     WHERE (hoten LIKE :search OR ma_lop LIKE :search)";

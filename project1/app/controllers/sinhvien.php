@@ -12,6 +12,8 @@
         $currentPage = is_numeric($page) ? (int)$page : 1;
         if ($currentPage < 1) $currentPage = 1;
 
+        // 2. Xử lý logic lưu từ khóa tìm kiếm qua Session
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $search = $_POST['search'] ?? '';
             $maLopFilter = $_POST['malop_filter'] ?? '';
